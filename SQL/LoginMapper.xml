@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mybatis.mapper.LoginMapper">
+	<cache />
+
+<select id="login" resultType="EmployeeDto">
+select		*
+from		EMPLOYEE_INFO
+where		EMP_ID = #{emp_id} and PW = #{pw }
+</select>
+
+<insert id="loginlog_insert">
+insert into		LOGIN_LOG
+				(EMP_ID, LOGIN_DT, LOGIN_RESULT, IP)
+values
+				(#{emp_id}, now(), #{login_result}, #{ip})
+</insert>
+
+</mapper>

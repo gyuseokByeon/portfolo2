@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 프로젝트에 맞게 수정  -->
+<mapper namespace="mybatis.mapper.VacationMapper">
+	<cache />
+
+<select id="selectListVacation" resultType="VacationDto">
+select		VAC.*, VAC.VAC_ID, C.CODE_ID, C.CODE_NAME, C.ATTR1, C.ATTR2, C.ATTR3
+from 		
+			VACATION as VAC 
+left join	CODE_LIST as C
+	on		VAC.VAC_ID = C.CODE_ID
+where		VAC.EMP_ID = #{emp_id }
+order by 	REGDATE DESC
+</select>
+
+<select id="getCodeList" resultType="CodeDto">
+select		*
+from		CODE_LIST 
+where		CODE_TYPE=#{code_type }
+</select>
+
+<select id="getOneCode" resultType="CodeDto">
+select		*
+from		CODE_LIST 
+where		CODE_ID = #{code_id }
+</select>
+
+<insert id="insertVacation">
+insert into		VACATION
+				(RID, EMP_ID, VAC_ID, VAC_START, VAC_END, VAC_CNT, VAC_COMMENT, REGDATE, STATE)
+values 
+				(#{rid }, #{emp_id}, #{vac_id }, #{vac_start}, #{vac_end}, #{vac_cnt}, #{vac_comment}, now(), #{state})
+ON DUPLICATE KEY UPDATE 
+				VAC_ID = #{vac_id }
+				,VAC_START = #{vac_start}
+				,VAC_END = #{vac_end}
+				,VAC_CNT = #{vac_cnt}
+				,VAC_COMMENT = #{vac_comment}
+				,REGDATE = now()
+				,STATE = #{state }
+</insert>
+
+<update id="updateVacState">
+update		VACATION 
+set 		STATE = 0 
+where 		RID = #{rid}
+</update>
+
+
+<select id="myAnnualVac" resultType="AnnualVacationDto">
+select		*
+from		ANNUAL_VACATION
+where		EMP_ID = #{emp_id}
+order by	YEAR DESC
+</select>
+
+<select id="selectRestVac" resultType="Float">
+select		REST_CNT 
+from		ANNUAL_VACATION
+where		EMP_ID = #{emp_id} and YEAR = #{year }
+</select>
+
+<select id="selectOneVac" resultType="VacationDto">
+select		*
+from		VACATION 
+where		RID=#{rid}
+</select>
+
+<update id="updateAnnVac">
+update		ANNUAL_VACATION 
+set			USE_CNT = USE_CNT + #{vac_cnt}
+			,REST_CNT = TOTAL_CNT - USE_CNT
+where		EMP_ID = #{emp_id } and YEAR = #{year }
+</update>
+
+
+<select id="emp_vacation_list_cnt" resultType="Integer">
+select		count(*)
+from
+			VACATION as VAC 
+left join 	CODE_LIST as C
+	on		VAC.VAC_ID = C.CODE_ID 
+left join 	EMPLOYEE_INFO as EMP 
+	on		VAC.EMP_ID = EMP.EMP_ID
+where <include refid="search_vac"></include>
+</select>
+
+<select id="emp_vacation_list" resultType="VacationDto">
+select		VAC.EMP_ID, EMP.NAME, EMP.SUB_NAME, VAC.VAC_ID, C.CODE_NAME, VAC.VAC_START, VAC.VAC_END, VAC.VAC_CNT, VAC.VAC_COMMENT, VAC.STATE, VAC.REGDATE
+from
+			VACATION as VAC 
+left join 	CODE_LIST as C
+	on		VAC.VAC_ID = C.CODE_ID 
+left join	EMPLOYEE_INFO as EMP 
+	on		VAC.EMP_ID = EMP.EMP_ID
+where		<include refid="search_vac"></include>
+order by	FIELD(EMP.STATE, 1, 0, 99)
+			,VAC.VAC_START DESC, VAC.EMP_ID ASC
+limit		#{firstIndex, javaType=int}, #{recordCountPerPage, javaType=int}
+</select>
+
+<sql id="search_vac">
+	<choose>
+		<when test="searchType == 'all'">
+			EMP.NAME		like CONCAT('%', #{keyword}, '%') 
+		or	EMP.SUB_NAME	like CONCAT('%', #{keyword}, '%') 
+		or	VAC.EMP_ID		like CONCAT('%', #{keyword}, '%')
+		or	C.CODE_NAME		like CONCAT('%', #{keyword}, '%')
+		or	VAC.VAC_COMMENT	like CONCAT('%', #{keyword}, '%')
+		</when>
+		
+		<when test="searchType == 'one_day'">
+			date(VAC.VAC_START) = date(#{day1 })
+		and	(
+				EMP.NAME		like CONCAT('%', #{keyword}, '%') 
+			or	EMP.SUB_NAME	like CONCAT('%', #{keyword}, '%') 
+			or	VAC.EMP_ID		like CONCAT('%', #{keyword}, '%')
+			or	C.CODE_NAME		like CONCAT('%', #{keyword}, '%')
+			or	VAC.VAC_COMMENT like CONCAT('%', #{keyword}, '%')
+			)
+		</when>
+		<when test="searchType == 'two_day'">
+			date(VAC.VAC_START) &gt;= date(#{day1 })
+		and	date(VAC.VAC_START) &lt;= date(#{day2 })
+		and	(
+				EMP.NAME		like CONCAT('%', #{keyword}, '%') 
+			or	EMP.SUB_NAME	like CONCAT('%', #{keyword}, '%') 
+			or	VAC.EMP_ID		like CONCAT('%', #{keyword}, '%')
+			or	C.CODE_NAME		like CONCAT('%', #{keyword}, '%')
+			or	VAC.VAC_COMMENT like CONCAT('%', #{keyword}, '%')
+			)
+		</when>
+		<otherwise></otherwise>
+	</choose>
+</sql>
+
+<select id="vacationListExel" resultType="VacationDto">
+select		VAC.EMP_ID, EMP.NAME, EMP.SUB_NAME, VAC.VAC_ID, C.CODE_NAME, VAC.VAC_START, VAC.VAC_END, VAC.VAC_CNT, VAC.VAC_COMMENT, VAC.STATE, VAC.REGDATE
+from		VACATION as VAC 
+left join	CODE_LIST as C
+	on		VAC.VAC_ID = C.CODE_ID 
+left join	EMPLOYEE_INFO as EMP 
+	on		VAC.EMP_ID = EMP.EMP_ID
+order by	FIELD(EMP.STATE, 1, 0, 99)
+			,VAC.VAC_START DESC, VAC.EMP_ID ASC
+</select>
+
+<select id="adm_annVac" resultType="AnnualVacationDto">
+select 
+			ANN.RID, EMP.EMP_ID, EMP.NAME
+			,IFNULL(ANN.YEAR, #{day1 }) as YEAR
+			,IFNULL(ANN.TOTAL_CNT, 0) as TOTAL_CNT
+			,IFNULL(ANN.REST_CNT,0) as REST_CNT
+			,IFNULL(ANN.USE_CNT,0) as USE_CNT
+			,ANN.REGDATE 
+from 
+			EMPLOYEE_INFO as EMP
+left join	(
+			select		*
+			from		ANNUAL_VACATION where YEAR=#{day1 }
+			) as ANN
+	on		EMP.EMP_ID = ANN.EMP_ID
+order by	FIELD(EMP.STATE, 1, 0, 99)
+			,ANN.REGDATE DESC
+limit		#{firstIndex, javaType=int}, #{recordCountPerPage, javaType=int}
+</select>
+
+<select id="adm_annVac_cnt" resultType="Integer">
+select		count(*)
+from
+			EMPLOYEE_INFO as EMP
+left join	(
+			select		*
+			from		ANNUAL_VACATION
+			where		YEAR=#{day1 }
+			) as ANN
+	on		EMP.EMP_ID = ANN.EMP_ID
+</select>
+
+
+<!-- 연차등록 -->
+<select id="annreg_empList" resultType="EmployeeDto">
+select		EMP.EMP_ID, EMP.NAME, EMP.SUB_NAME
+from
+			EMPLOYEE_INFO as EMP
+left join	(
+			select		*
+			from		ANNUAL_VACATION
+			where		YEAR=#{year}
+			) as ANN
+	on		EMP.EMP_ID = ANN.EMP_ID
+where		ANN.REGDATE is null
+			and EMP.STATE = 1
+</select>
+
+<select id="ck_annreg" resultType="Integer">
+select		count(RID)
+from		ANNUAL_VACATION
+where		EMP_ID=#{emp_id } and YEAR=#{year}
+</select>
+
+<insert id="ann_insert">
+insert into		ANNUAL_VACATION
+				(EMP_ID, YEAR, VAC_ID, TOTAL_CNT, REST_CNT, USE_CNT, REGDATE)
+values			(#{emp_id }, #{year }, '1001', #{total_cnt }, #{total_cnt}, 0, now())
+</insert>
+
+<select id="select_annvac_one" resultType="AnnualVacationDto">
+select		* 
+from		ANNUAL_VACATION
+where		RID=#{rid}
+</select>
+
+<update id="update_annvac">
+update		ANNUAL_VACATION 
+set			TOTAL_CNT = #{total_cnt }
+			,REST_CNT = #{rest_cnt }
+			,REGDATE = now()
+where		RID=#{rid }
+</update>
+
+<select id="selectCodeName">
+select		CODE_NAME 
+from		CODE_LIST
+where		CODE_ID = #{code_id }
+</select>
+
+
+</mapper>

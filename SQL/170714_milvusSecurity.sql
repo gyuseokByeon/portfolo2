@@ -1,0 +1,164 @@
+-- milvus_security 데이터베이스 구조 내보내기
+CREATE DATABASE IF NOT EXISTS `milvus_security` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `milvus_security`;
+
+-- 테이블 milvus_security.ADMIN_BOARD 구조 내보내기
+CREATE TABLE IF NOT EXISTS `ADMIN_BOARD` (
+  `RID` int(11) NOT NULL AUTO_INCREMENT COMMENT '행번호',
+  `EMP_ID` varchar(20) DEFAULT NULL COMMENT '직원 로그인 ID, 작성자',
+  `CONTENTS` text COMMENT '글 내용',
+  `REGDATE` datetime DEFAULT NULL COMMENT '글 작성일',
+  `CDATE` datetime DEFAULT NULL COMMENT '요청 처리일',
+  `STATE` int(11) DEFAULT NULL COMMENT '처리 상태[0:등록| 1:처리| 2:반려]',
+  `ADMIN_STATE` int(11) DEFAULT NULL COMMENT '관리자 처리 상태[0:처리x|1:처리완료]',
+  PRIMARY KEY (`RID`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='관리자 게시판 테이블';
+
+
+-- 테이블 milvus_security.ANNUAL_VACATION 구조 내보내기
+CREATE TABLE IF NOT EXISTS `ANNUAL_VACATION` (
+  `RID` int(11) NOT NULL AUTO_INCREMENT COMMENT '행번호',
+  `EMP_ID` varchar(20) DEFAULT NULL COMMENT '직원 로그인 ID',
+  `YEAR` varchar(5) DEFAULT NULL COMMENT '연차 등록 년도',
+  `VAC_ID` varchar(10) DEFAULT NULL COMMENT '연차휴가코드',
+  `TOTAL_CNT` float DEFAULT NULL COMMENT '총 연차 일수',
+  `REST_CNT` float DEFAULT NULL COMMENT '남은 연차 일수',
+  `USE_CNT` float DEFAULT NULL COMMENT '사용 연차 일수',
+  `REGDATE` datetime DEFAULT NULL COMMENT '관리자가 연차를 등록한 날짜',
+  PRIMARY KEY (`RID`)
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8 COMMENT='직원 연차 테이블';
+
+
+-- 테이블 milvus_security.CODE_LIST 구조 내보내기
+CREATE TABLE IF NOT EXISTS `CODE_LIST` (
+  `RID` int(11) NOT NULL AUTO_INCREMENT COMMENT '행번호',
+  `CODE_ID` varchar(10) DEFAULT NULL COMMENT '코드아이디(실제사용값)',
+  `CODE_TYPE` varchar(20) DEFAULT NULL COMMENT '코드타입(VC:휴가, DEPT:부서)',
+  `CODE_NAME` varchar(50) DEFAULT NULL COMMENT '코드 이름',
+  `COMMENT` varchar(100) DEFAULT NULL COMMENT '해당 코드 설명',
+  `ATTR1` varchar(50) DEFAULT NULL COMMENT '코드 속성1 : TYPE:VC=연차유무',
+  `ATTR2` varchar(50) DEFAULT NULL COMMENT '코드 속성2 : TYPE:VC=연차사용일수(0,0.5,1)',
+  `ATTR3` varchar(50) DEFAULT NULL COMMENT '코드 속성3',
+  `ATTR4` varchar(50) DEFAULT NULL COMMENT '코드 속성4',
+  PRIMARY KEY (`RID`),
+  UNIQUE KEY `CODE_ID` (`CODE_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='코드 정보 테이블';
+
+
+-- 테이블 milvus_security.EMPLOYEE_INFO 구조 내보내기
+CREATE TABLE IF NOT EXISTS `EMPLOYEE_INFO` (
+  `RID` int(11) NOT NULL AUTO_INCREMENT COMMENT '행번호',
+  `EMP_ID` varchar(20) DEFAULT NULL COMMENT '직원 로그인 ID',
+  `PW` varchar(255) DEFAULT NULL COMMENT '직원 비밀번호',
+  `NAME` varchar(20) DEFAULT NULL COMMENT '직원명',
+  `SUB_NAME` varchar(20) DEFAULT NULL COMMENT '영어이름',
+  `EMAIL` varchar(140) DEFAULT NULL COMMENT '이메일',
+  `H_PHONE` varchar(20) DEFAULT NULL COMMENT '개인핸드폰번호',
+  `O_PHONE` varchar(20) DEFAULT NULL COMMENT '사내번호',
+  `DEPT_ID` varchar(10) DEFAULT NULL COMMENT '부서코드',
+  `POSITION` varchar(10) DEFAULT NULL COMMENT '직급코드',
+  `LEVEL` tinyint(4) DEFAULT NULL COMMENT '시스템 권한 [0:일반직원 | 1:관리자 ]',
+  `STATE` tinyint(4) DEFAULT NULL COMMENT '상태 [0 : 퇴사 | 1 : 일반 | 2 : 기타 ]',
+  `JOIN_DATE` timestamp NULL DEFAULT NULL COMMENT '직원등록일',
+  `RESIGNATION_DATE` timestamp NULL DEFAULT NULL COMMENT '퇴사처리일',
+  PRIMARY KEY (`RID`),
+  UNIQUE KEY `EMP_ID` (`EMP_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8 COMMENT='직원 정보 테이블';
+
+-- 테이블 milvus_security.FINGERPRINT_MNG 구조 내보내기
+CREATE TABLE IF NOT EXISTS `FINGERPRINT_MNG` (
+  `RID` int(11) NOT NULL AUTO_INCREMENT COMMENT '행번호',
+  `EMP_ID` varchar(20) DEFAULT NULL COMMENT '직원 로드인 ID',
+  `ID` varchar(50) DEFAULT NULL COMMENT '인식기 ID',
+  `ID_TYPE` varchar(20) DEFAULT NULL COMMENT 'ID 타입::CARD(카드)/FP(지문)',
+  `REGDATE` datetime DEFAULT NULL COMMENT '등록일',
+  PRIMARY KEY (`RID`),
+  UNIQUE KEY `ID` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='지문인식기 관리 테이블';
+
+
+-- 테이블 milvus_security.INOUT_MI_LOG 구조 내보내기
+CREATE TABLE IF NOT EXISTS `INOUT_MI_LOG` (
+  `RID` int(11) NOT NULL AUTO_INCREMENT COMMENT '행번호',
+  `EMP_ID` varchar(20) DEFAULT NULL COMMENT '직원 로그인 ID',
+  `REAL_DAY` date DEFAULT NULL COMMENT '출퇴근 기준일 D-0 06:00~D+1 5:59',
+  `MI_IN` datetime DEFAULT NULL COMMENT '출근시간',
+  `MI_OUT` datetime DEFAULT NULL COMMENT '퇴근시간',
+  `LATE_YN` tinyint(4) DEFAULT NULL COMMENT '지각여부: 0-지각X, 1-지각',
+  `JIK_YN` tinyint(4) DEFAULT NULL COMMENT '직출 여부: 1-직출',
+  `JIK_COMMENT` varchar(200) DEFAULT NULL COMMENT '직출 사유',
+  `NIGHT_COMMENT` varchar(200) DEFAULT NULL COMMENT '야근 사유',
+  `INOUT_STATE` tinyint(4) DEFAULT NULL COMMENT '[0: 업무중, 1: 퇴근]',
+  PRIMARY KEY (`RID`),
+  UNIQUE KEY `EMP_ID_REAL_DAY` (`EMP_ID`,`REAL_DAY`),
+  UNIQUE KEY `RID_EMP_ID` (`RID`,`EMP_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=2605 DEFAULT CHARSET=utf8 COMMENT='출퇴근 내역 관리 테이블';
+
+
+-- 테이블 milvus_security.INOUT_WORK_LOG 구조 내보내기
+CREATE TABLE IF NOT EXISTS `INOUT_WORK_LOG` (
+  `RID` int(11) NOT NULL AUTO_INCREMENT COMMENT '행번호',
+  `EMP_ID` varchar(20) DEFAULT NULL COMMENT '직원 로그인 ID',
+  `REAL_DAY` date DEFAULT NULL COMMENT '기준일',
+  `WORK_OUT` datetime DEFAULT NULL COMMENT '외근시간',
+  `WORK_IN` datetime DEFAULT NULL COMMENT '복귀시간',
+  `WORK_COMMENT` varchar(100) DEFAULT NULL COMMENT '외근 사유',
+  `WORK_STATE` tinyint(4) DEFAULT NULL COMMENT '복귀여부 확인 [0:미복귀, 1:복귀]',
+  PRIMARY KEY (`RID`)
+) ENGINE=InnoDB AUTO_INCREMENT=556 DEFAULT CHARSET=utf8 COMMENT='외근 내역 관리 테이블';
+
+
+-- 테이블 milvus_security.LOGIN_LOG 구조 내보내기
+CREATE TABLE IF NOT EXISTS `LOGIN_LOG` (
+  `RID` int(11) NOT NULL AUTO_INCREMENT COMMENT '행번호',
+  `EMP_ID` varchar(20) DEFAULT NULL COMMENT '직원 로그인 ID',
+  `LOGIN_DT` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '로그인 시도한 날짜시간',
+  `LOGIN_RESULT` int(11) DEFAULT NULL COMMENT '로그인 성공여부 [ 성공 : 0 | 실패 : 1 ]',
+  `IP` varchar(50) DEFAULT NULL COMMENT '로그인시 접속 IP',
+  `ITO1` varchar(255) DEFAULT NULL,
+  `ITO2` varchar(50) DEFAULT NULL,
+  `ITO3` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`RID`)
+) ENGINE=InnoDB AUTO_INCREMENT=565 DEFAULT CHARSET=utf8 COMMENT='로그인 로그 테이블';
+
+-- 테이블 milvus_security.VACATION 구조 내보내기
+CREATE TABLE IF NOT EXISTS `VACATION` (
+  `RID` int(11) NOT NULL AUTO_INCREMENT COMMENT '행번호',
+  `EMP_ID` varchar(20) DEFAULT NULL COMMENT '직원 로그인 ID',
+  `VAC_ID` varchar(10) DEFAULT NULL COMMENT '휴가 코드',
+  `VAC_START` date DEFAULT NULL COMMENT '휴가 시작일',
+  `VAC_END` date DEFAULT NULL COMMENT '휴가 종료일',
+  `VAC_CNT` float DEFAULT NULL COMMENT '휴가 일수',
+  `VAC_COMMENT` varchar(100) DEFAULT NULL COMMENT '휴가 사유',
+  `REGDATE` datetime DEFAULT NULL COMMENT '휴가 등록일',
+  `STATE` tinyint(4) DEFAULT NULL COMMENT '상태 (1:등록된 휴가 / 0 : 취소)',
+  `ANN_RID` int(11) DEFAULT NULL,
+  PRIMARY KEY (`RID`)
+) ENGINE=InnoDB AUTO_INCREMENT=133 DEFAULT CHARSET=utf8 COMMENT='휴가 내역 테이블';
+
+-- 테이블 milvus_security.VACATION_LOG 구조 내보내기
+CREATE TABLE IF NOT EXISTS `VACATION_LOG` (
+  `RID` int(11) NOT NULL AUTO_INCREMENT,
+  `O_RID` int(11) DEFAULT NULL,
+  `EMP_ID` int(11) DEFAULT NULL,
+  `VAC_ID` int(11) DEFAULT NULL,
+  `VAC_START` date DEFAULT NULL,
+  `VAC_END` date DEFAULT NULL,
+  `VAC_CNT` int(11) DEFAULT NULL,
+  `VAC_COMMENT` varchar(100) DEFAULT NULL,
+  `REGDATE` timestamp NULL DEFAULT NULL,
+  `STATE` tinyint(4) DEFAULT NULL COMMENT '[ 0: 등록 / 1 : 수정 / 2 : 삭제 ]',
+  PRIMARY KEY (`RID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='휴가 등록 로그 테이블';
+
+
+-- 테이블 milvus_security.VAR_LIST 구조 내보내기
+CREATE TABLE IF NOT EXISTS `VAR_LIST` (
+  `RID` int(11) NOT NULL AUTO_INCREMENT COMMENT '행번호',
+  `VAR_ID` varchar(10) DEFAULT NULL COMMENT '변수 아이디',
+  `VAR_NAME` varchar(50) DEFAULT NULL COMMENT '변수 이름',
+  `VAR_VALUE` varchar(50) DEFAULT NULL COMMENT '변수 값',
+  `VAR_TYPE` varchar(50) DEFAULT NULL COMMENT '변수 타입',
+  `COMMENT` varchar(100) DEFAULT NULL COMMENT '변수 설명',
+  PRIMARY KEY (`RID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='시스템 변수 테이블';

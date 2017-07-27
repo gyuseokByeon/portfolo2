@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 프로젝트에 맞게 수정  -->
+<mapper namespace="mybatis.mapper.AdminBoardMapper">
+	<cache />
+
+<select id="emp_boardlist" resultType="AdminBoardDto">
+select 		*
+from 		ADMIN_BOARD
+where		EMP_ID like CONCAT('%',#{keyword},'%') 
+order by	REGDATE desc
+limit 		#{firstIndex, javaType=int}, #{recordCountPerPage, javaType=int}
+</select>
+
+<select id="emp_boardlist_cnt" resultType="Integer">
+select 		count(RID) 
+from 		ADMIN_BOARD
+where 		EMP_ID = #{keyword }
+</select>
+
+<insert id="emp_inst_ab">
+insert into		ADMIN_BOARD
+	(EMP_ID, CONTENTS, REGDATE, STATE)
+values
+	(#{emp_id }, #{contents }, now(), 0)
+</insert>
+
+<update id="adm_update_abstate">
+update 		ADMIN_BOARD
+set 
+			cdate = #{cdate }
+			, state = #{state }
+			, admin_state = #{admin_state }
+where 		RID = #{rid }
+</update>
+
+<delete id="emp_del_ab">
+delete from 	ADMIN_BOARD 
+where 			RID = #{rid}
+</delete>
+
+
+
+
+
+
+</mapper>

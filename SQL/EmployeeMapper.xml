@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 프로젝트에 맞게 수정  -->
+<mapper namespace="mybatis.mapper.EmployeeMapper">
+	<cache />
+
+
+<select id="select_all_emp_cnt" resultType="Integer">
+select 		count(RID)
+from		EMPLOYEE_INFO
+where 		<include refid="search_emp"></include>
+</select>
+
+<select id="select_all_emp" resultType="EmployeeDto">
+select 		*
+from 		EMPLOYEE_INFO
+where		<include refid="search_emp"></include>
+order by 	FIELD(STATE, 1, 0, 99), JOIN_DATE DESC
+limit		#{firstIndex, javaType=int}, #{recordCountPerPage, javaType=int}
+</select>
+
+<sql id="search_emp">
+<choose>
+	<when test="searchType == 'loginemp'">
+		STATE = 1
+		and (	NAME 		like CONCAT('%', #{keyword }, '%')
+			or	SUB_NAME	like CONCAT('%', #{keyword }, '%')
+			or	EMP_ID		like CONCAT('%', #{keyword }, '%')
+			or	EMAIL		like CONCAT('%', #{keyword }, '%')
+			)
+	</when>
+	
+	<when test="searchType == 'all'">
+		(	NAME 		like CONCAT('%', #{keyword }, '%')
+		or	SUB_NAME	like CONCAT('%', #{keyword }, '%')
+		or	EMP_ID		like CONCAT('%', #{keyword }, '%')
+		or	EMAIL		like CONCAT('%', #{keyword }, '%')
+		)
+	</when>
+	
+	<when test="searchType == 'emp_state'">
+		STATE = #{state }
+	</when>
+	
+	<otherwise>
+	</otherwise>
+</choose>
+</sql>
+
+<select id="select_one_emp" resultType="EmployeeDto">
+select		*
+from		EMPLOYEE_INFO 
+where		EMP_ID = #{emp_id}
+</select>
+
+<update id="emp_update_myinfo">
+update		EMPLOYEE_INFO 
+set			EMAIL = #{email }
+			,H_PHONE = #{h_phone}
+where 		EMP_ID = #{emp_id}
+</update>
+
+<insert id="insert_emp">
+insert into 	EMPLOYEE_INFO
+				(EMP_ID, PW, NAME, SUB_NAME, EMAIL, H_PHONE, O_PHONE, LEVEL, STATE, JOIN_DATE)
+values
+				(#{emp_id }, #{pw }, #{name }, #{sub_name }, #{email }, #{h_phone }, #{o_phone }, 0, 1, now())
+</insert>
+
+<select id="ck_empid" resultType="Integer">
+select		count(RID) 
+from		EMPLOYEE_INFO
+where		EMP_ID = #{emp_id }
+</select>
+
+
+<update id="emp_update_admin">
+update 		EMPLOYEE_INFO 
+set
+			PW = #{pw }
+			,NAME = #{name }
+			,SUB_NAME = #{sub_name }
+			,EMAIL = #{email}
+			,H_PHONE = #{h_phone }
+			,O_PHONE = #{o_phone }
+where 		EMP_ID= #{emp_id}
+</update>
+
+<!-- <delete id="emp_delete_admin">
+delete from 	EMPLOYEE_INFO 
+where 			RID = #{rid}
+</delete> -->
+
+<update id="emp_resignation_update">
+update		EMPLOYEE_INFO
+set			STATE = #{state }
+			,RESIGNATION_DATE = now()
+where		EMP_ID = #{emp_id }
+</update>
+
+
+
+<select id="all_emp_sheet" resultType="EmployeeDto">
+select 		*
+from 		EMPLOYEE_INFO
+order by 	RID asc
+</select>
+
+
+
+
+
+
+
+</mapper>

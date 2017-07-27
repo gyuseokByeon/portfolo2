@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 프로젝트에 맞게 수정  -->
+<mapper namespace="mybatis.mapper.InoutMapper">
+	<cache />
+
+<select id="inoutlist_select" resultType="InoutMiDto">
+<!-- 기준일의 근태 내역 조회 -->
+select 
+			EMP.NAME, LOG.MI_IN, LOG.MI_OUT, LOG.LATE_YN, LOG.JIK_YN, LOG.JIK_COMMENT, LOG.NIGHT_COMMENT, LOG.REAL_DAY, LOG.EMP_ID, EMP.sub_name
+from 
+			EMPLOYEE_INFO as EMP 
+left join 	INOUT_MI_LOG as LOG
+	on		EMP.EMP_ID = LOG.EMP_ID and LOG.REAL_DAY= #{real_day }
+</select>
+
+<!-- 기준일의 근태 내역 조회 : 쿼리문 조건 추가 -->
+<select id="inoutlist_v2" resultType="InoutMiDto">
+select 
+			LOG.RID, EMP.NAME, LOG.MI_IN, LOG.MI_OUT, LOG.LATE_YN, LOG.JIK_YN, LOG.JIK_COMMENT, LOG.NIGHT_COMMENT, LOG.REAL_DAY, EMP.EMP_ID, EMP.sub_name
+from 
+			EMPLOYEE_INFO as EMP 
+left join 	INOUT_MI_LOG as LOG
+	on 		EMP.EMP_ID = LOG.EMP_ID 
+			and 	LOG.REAL_DAY= #{real_day }
+where		EMP.STATE = 1
+order by	FIELD(EMP.emp_id, #{emp_id }) DESC, EMP.name ASC
+limit 		#{p_start }, 7
+</select>
+
+<select id="inout_cnt" resultType="Integer">
+<!-- 근태(INOUT-MI-LOG) row 수 -->
+select		count(RID)
+from 		INOUT_MI_LOG
+where 		EMP_ID=#{emp_id } and REAL_DAY=#{real_day}
+</select>
+
+<select id="inout_select" resultType="InoutMiDto">
+<!-- 근태 내역 조회 : emp_id, real_day 입력된 값 있는지:3c-->
+select		*
+from		INOUT_MI_LOG 
+where		EMP_ID=#{emp_id } and REAL_DAY=#{real_day}
+</select>
+
+<select id="selectRidInout" resultType="InoutMiDto">
+select		*
+from		INOUT_MI_LOG
+where		RID = #{rid }
+</select>
+
+<select id="selectRidWorkInout" resultType="InoutWorkDto">
+select		*
+from		INOUT_WORK_LOG
+where		RID = #{rid }
+</select>
+
+
+
+<insert id="insert_miin">
+<!-- 출근 입력 -->
+insert into		INOUT_MI_LOG
+	(EMP_ID, REAL_DAY, MI_IN, LATE_YN, JIK_YN, JIK_COMMENT, INOUT_STATE)
+value 
+	(#{emp_id }, #{real_day }, #{mi_in }, #{late_yn}, #{jik_yn }, #{jik_comment}, 0)
+</insert>
+
+<update id="update_miout">
+<!-- 퇴근 업데이트:3c -->
+update		INOUT_MI_LOG 
+set 
+			MI_OUT = #{mi_out }
+			,NIGHT_COMMENT = #{night_comment }
+			,INOUT_STATE = 1
+where 		EMP_ID=#{emp_id } and REAL_DAY=#{real_day }
+</update>
+
+<select id="cnt_workinout" resultType="Integer">
+<!-- 외근 내역 횟수 -->
+select		count(RID) 
+from 		INOUT_WORK_LOG
+where		EMP_ID=#{emp_id } and REAL_DAY=#{real_day} and WORK_STATE=#{work_state}
+</select>
+
+<select id="selectlist_workinout" resultType="InoutWorkDto">
+<!-- 외근내역조회 -->
+select		*
+from 		INOUT_WORK_LOG
+where 		REAL_DAY = #{real_day } and emp_id=#{emp_id } and WORK_STATE=#{work_state}
+</select>
+
+<select id="workList" resultType="InoutWorkDto">
+<!-- 외근 하루 전체 리스트 조회 -->
+select 		*
+from		INOUT_WORK_LOG
+where		REAL_DAY = #{real_day }
+order by 	WORK_OUT DESC
+</select>
+
+<insert id="insert_workout">
+<!-- 외근 입력 -->
+insert into 	INOUT_WORK_LOG 
+	(EMP_ID, REAL_DAY, WORK_OUT, WORK_COMMENT, WORK_STATE) 
+values
+	(#{emp_id}, #{real_day}, #{work_out }, #{work_comment}, #{work_state })
+</insert>
+
+<update id="update_workin">
+<!-- 복귀입력 -->
+	update INOUT_WORK_LOG
+	set WORK_IN = #{work_in}, WORK_STATE = #{work_state}
+	where RID = #{rid}
+</update>
+
+<update id="jikcommupdate">
+update INOUT_MI_LOG
+set 
+	JIK_COMMENT = #{jik_comment }
+where
+	RID = #{rid }
+</update>
+
+<update id="nightcommupdate">
+update INOUT_MI_LOG
+set 
+	NIGHT_COMMENT = #{night_comment }
+where
+	RID = #{rid }
+</update>
+
+<update id="workoutcommupdate">
+update INOUT_WORK_LOG
+set 
+	WORK_COMMENT = #{work_comment }
+where
+	RID = #{rid }
+</update>
+
+<select id="selectNoneRegMiInout" resultType="Integer">
+select			RID
+from			INOUT_MI_LOG
+where			date(#{real_day}) > REAL_DAY 
+			and INOUT_STATE = 0
+			and EMP_ID = #{emp_id }
+</select>
+
+<select id="selectNoneRegWorkInout" resultType="Integer">
+select			RID
+from			INOUT_WORK_LOG
+where			date(#{real_day}) > REAL_DAY 
+			and WORK_STATE = 0
+			and EMP_ID = #{emp_id }
+</select>
+
+
+<!-- 월별 근태내역 조회 -->
+<select id="my-inout-info" resultType="MyInoutDto">
+select 		M_INOUT.MONTH, M_INOUT.INOUT_COUNT, M_INOUT.LATE_COUNT, W_INOUT.WORK_COUNT 
+from		
+			(
+			select		DATE_FORMAT(REAL_DAY, '%Y-%m') as MONTH, SUM(INOUT_STATE) as INOUT_COUNT, SUM(LATE_YN) as LATE_COUNT
+			from		INOUT_MI_LOG
+			where		EMP_ID = #{emp_id }
+			group by	MONTH 
+			order by 	MONTH DESC
+			) as M_INOUT
+left join 
+			(
+			select		DATE_FORMAT(REAL_DAY,'%Y-%m') as MONTH, SUM(WORK_STATE) as WORK_COUNT
+			from		INOUT_WORK_LOG
+			where		EMP_ID = #{emp_id }
+			group by 	MONTH 
+			order by	MONTH DESC
+			) as W_INOUT
+on			M_INOUT.MONTH = W_INOUT.MONTH
+</select>
+
+<!-- 관리자페이지 : 근태내역 검색 -->
+<select id="adm_inout_cnt" resultType="Integer">
+select			count(LOG.RID)
+from
+				INOUT_MI_LOG as LOG
+left join 		
+				EMPLOYEE_INFO as EMP
+	on			LOG.EMP_ID = EMP.EMP_ID
+where			<include refid="search_inout"></include>
+</select>
+
+<select id="adm_inout_list" resultType="InoutMiDto">
+select			LOG.RID, LOG.REAL_DAY, LOG.EMP_ID, EMP.SUB_NAME, EMP.NAME, LOG.MI_IN, LOG.JIK_COMMENT, LOG.MI_OUT, LOG.LATE_YN, LOG.JIK_YN, LOG.NIGHT_COMMENT
+from 			INOUT_MI_LOG as LOG 
+left join 
+				EMPLOYEE_INFO as EMP
+	on			LOG.EMP_ID = EMP.EMP_ID
+where 			<include refid="search_inout"></include>
+order by		LOG.REAL_DAY DESC
+				,EMP.NAME ASC
+limit			#{firstIndex, javaType=int}, #{recordCountPerPage, javaType=int}
+</select>
+
+<sql id="search_inout">
+<choose>
+	<when test="searchType == 'all'">
+	(
+			EMP.NAME 			like CONCAT('%', #{keyword }, '%') 
+	or 		EMP.SUB_NAME	 	like CONCAT('%', #{keyword }, '%') 
+	or 		LOG.EMP_ID 			like CONCAT('%', #{keyword }, '%')
+	or 		LOG.JIK_COMMENT 	like CONCAT('%', #{keyword }, '%')
+	or 		LOG.NIGHT_COMMENT 	like CONCAT('%', #{keyword }, '%')
+	)
+	</when>
+	
+	<when test="searchType == 'one_day'">
+			date(LOG.REAL_DAY) = date(#{day1 })
+	and		(
+			EMP.NAME 			like CONCAT('%',#{keyword},'%') 
+		or	EMP.SUB_NAME 		like CONCAT('%',#{keyword},'%') 
+		or	LOG.EMP_ID 			like CONCAT('%',#{keyword},'%')
+		or	LOG.JIK_COMMENT 	like CONCAT('%',#{keyword},'%')
+		or	LOG.NIGHT_COMMENT 	like CONCAT('%',#{keyword},'%')
+			)
+	</when>
+	
+	<when test="searchType == 'two_day'">
+			date(LOG.REAL_DAY) &gt;= date(#{day1 })
+	and		date(LOG.REAL_DAY) &lt;= date(#{day2 })
+	and		(
+			EMP.NAME			like CONCAT('%',#{keyword},'%') 
+		or	EMP.SUB_NAME		like CONCAT('%',#{keyword},'%') 
+		or	LOG.EMP_ID			like CONCAT('%',#{keyword},'%')
+		or	LOG.JIK_COMMENT		like CONCAT('%',#{keyword},'%')
+		or	LOG.NIGHT_COMMENT	like CONCAT('%',#{keyword},'%')
+			)
+	</when>
+	
+	<otherwise></otherwise>
+</choose>
+</sql>
+
+<!-- 관리자 : 근태내역 엑셀 다운로드 -->
+<select id="all_inout_sheeet" resultType="InoutMiDto">
+select		LOG.REAL_DAY, LOG.EMP_ID, EMP.SUB_NAME, EMP.NAME, LOG.MI_IN, LOG.JIK_COMMENT, LOG.MI_OUT, LOG.LATE_YN, LOG.JIK_YN, LOG.NIGHT_COMMENT, EMP.STATE as emp_state
+from		
+			INOUT_MI_LOG as LOG 
+left join 	EMPLOYEE_INFO as EMP
+	on 		LOG.EMP_ID = EMP.EMP_ID
+order by 	LOG.REAL_DAY DESC
+			,EMP.NAME ASC
+</select>
+
+<!-- 관리자 : 월별 근태 통계 내역 조회 -->
+<select id="all_month_inout" resultType="MyInoutDto">
+select 		TTL.EMP_ID, EMP.NAME, EMP.SUB_NAME, TTL.month
+			,IFNULL(TTL.INOUT_COUNT, 0) as INOUT_COUNT
+			,IFNULL(TTL.LATE_COUNT, 0) as LATE_COUNT
+			,IFNULL(TTL.WORK_COUNT, 0) as WORK_COUNT
+from		(
+			select		MI.EMP_ID , MI.MONTH, MI.INOUT_COUNT, MI.LATE_COUNT, WW.WORK_COUNT 
+			from		(
+						select		DATE_FORMAT(REAL_DAY, '%Y-%m') as MONTH, SUM(INOUT_STATE) as INOUT_COUNT, SUM(LATE_YN) as LATE_COUNT, EMP_ID
+						from		INOUT_MI_LOG
+						group by	MONTH, EMP_ID
+						) as MI
+			left join	(
+						select		DATE_FORMAT(REAL_DAY,'%Y-%m') as MONTH, SUM(WORK_STATE) as WORK_COUNT, EMP_ID
+						from		INOUT_WORK_LOG
+						group by	MONTH, EMP_ID
+						) as WW
+				on		MI.MONTH = WW.MONTH and MI.EMP_ID = WW.EMP_ID
+			) as TTL
+left join
+			EMPLOYEE_INFO as EMP
+	on		TTL.EMP_ID = EMP.EMP_ID
+where		(
+				EMP.NAME		like CONCAT('%',#{keyword},'%') 
+			or	EMP.SUB_NAME 	like CONCAT('%',#{keyword},'%') 
+			or	TTL.EMP_ID		like CONCAT('%',#{keyword},'%')
+			)
+			and TTL.MONTH = #{month }
+order by	TTL.MONTH DESC
+			,EMP.NAME ASC
+limit 		#{firstIndex, javaType=int}, #{recordCountPerPage, javaType=int}
+</select>
+
+<select id="all_month_inout_cnt" resultType="Integer">
+select		count(*)
+from		(
+			select		MI.EMP_ID , MI.MONTH, MI.INOUT_COUNT, MI.LATE_COUNT, WW.WORK_COUNT 
+			from		(
+						select		DATE_FORMAT(REAL_DAY, '%Y-%m') as MONTH, SUM(INOUT_STATE) as INOUT_COUNT, SUM(LATE_YN) as LATE_COUNT, EMP_ID
+						from 		INOUT_MI_LOG
+						group by	MONTH, EMP_ID
+						) as MI
+			left join	(
+						select		DATE_FORMAT(REAL_DAY,'%Y-%m') as MONTH, SUM(WORK_STATE) as WORK_COUNT, EMP_ID
+						from		INOUT_WORK_LOG
+						group by 	MONTH, EMP_ID
+						) as WW
+				on		MI.MONTH = WW.MONTH and MI.EMP_ID = WW.EMP_ID
+			) as TTL
+left join
+		 	EMPLOYEE_INFO as EMP
+	on		TTL.EMP_ID = EMP.EMP_ID
+where		(
+				EMP.NAME		like CONCAT('%',#{keyword},'%') 
+			or	EMP.SUB_NAME 	like CONCAT('%',#{keyword},'%') 
+			or	TTL.EMP_ID		like CONCAT('%',#{keyword},'%')
+			)
+			and TTL.MONTH = #{month }
+order by	TTL.MONTH DESC
+			,EMP.NAME ASC
+</select>
+
+
+<!-- 전직원 월별 근태내역 리스트 -->
+<select id="monthEmployeeInOutSheet" resultType="MyInoutDto">
+select 		TTL.EMP_ID
+			,EMP.NAME
+			,EMP.SUB_NAME
+			,TTL.month
+			,IFNULL(TTL.INOUT_COUNT, 0) as INOUT_COUNT
+			,IFNULL(TTL.LATE_COUNT, 0) as LATE_COUNT
+			,IFNULL(TTL.WORK_COUNT, 0) as WORK_COUNT
+from		(
+			select		MI.EMP_ID , MI.MONTH, MI.INOUT_COUNT, MI.LATE_COUNT, WW.WORK_COUNT 
+			from		(
+						select		DATE_FORMAT(REAL_DAY, '%Y-%m') as MONTH, SUM(INOUT_STATE) as INOUT_COUNT, SUM(LATE_YN) as LATE_COUNT, EMP_ID
+						from		INOUT_MI_LOG
+						group by	MONTH, EMP_ID
+						) as MI
+			left join	(
+						select		DATE_FORMAT(REAL_DAY,'%Y-%m') as MONTH, SUM(WORK_STATE) as WORK_COUNT, EMP_ID
+						from		INOUT_WORK_LOG
+						group by	MONTH, EMP_ID
+						) as WW
+				on		MI.MONTH = WW.MONTH and MI.EMP_ID = WW.EMP_ID
+			) as TTL
+left join
+			EMPLOYEE_INFO as EMP
+	on		TTL.EMP_ID = EMP.EMP_ID
+where		TTL.MONTH = #{month }
+order by	TTL.MONTH DESC
+			,EMP.NAME ASC
+</select>
+
+
+
+
+<!-- 관리자 : 개인 출퇴 내역 수정 -->
+<update id="adm-inout-update">
+update		INOUT_MI_LOG
+set			MI_IN = #{mi_in }
+			,MI_OUT = IF(#{mi_out } = '', NULL, #{mi_out })
+			,LATE_YN = #{late_yn }
+			,JIK_YN = #{jik_yn }
+			,JIK_COMMENT = #{jik_comment }
+			,NIGHT_COMMENT = #{night_comment }
+			,INOUT_STATE = #{inout_state }
+where		RID = #{rid }
+</update>
+
+
+
+
+
+</mapper>
