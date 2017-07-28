@@ -76,13 +76,13 @@ if(rememberYn.equals("rememberMe")) {
 <img src="/img/02_inout_Page03.jpg" height="300">
 
 #### 코드 링크
-`페이지 : ` [inout-log.jsp](/)
+`페이지 : ` [inout-log.jsp](/View/inout/inout-log.jsp)
 <br/>
-`Controller : ` [InoutController.java](/)
+`Controller : ` [InoutController.java](/Controller/InoutController.java)
 <br/>
-`Service : ` [InoutServiceImpl.java](/)
+`Service : ` [InoutServiceImpl.java](/Service/Impl/InoutServiceImpl.java)
 <br/>
-`SQL : ` [InoutMapper.xml](/)
+`SQL : ` [InoutMapper.xml](/SQL/InoutMapper.xml)
 
 #### 기능 요약
 > * 반응형 웹페이지 <br/>
@@ -139,13 +139,13 @@ $(window).scroll(function() {
 <img src="/img/02_inout_Admin_Page03.jpg" width="500"><br/>
 
 #### 코드 링크
-`페이지 : ` [adminInoutLog.jsp](/)
+`페이지 : ` [adminInoutLog.jsp](/View/admin/adminInoutLog.jsp)
 <br/>
-`Controller : ` [AdminController.java](/)
+`Controller : ` [AdminController.java](/Controller/AdminController.java)
 <br/>
-`Service : ` [AdminServiceImpl.java](/)
+`Service : ` [AdminServiceImpl.java](/Service/Impl/AdminServiceImpl.java)
 <br/>
-`SQL : ` [InoutMapper.xml](/)
+`SQL : ` [InoutMapper.xml](/SQL/InoutMapper.xml)
 
 
 #### 기능 요약
@@ -214,13 +214,13 @@ limit			#{firstIndex, javaType=int}, #{recordCountPerPage, javaType=int}
 <img src="/img/02_inout_Admin_Page05.jpg" width="500"><br/>
 
 #### 코드 링크
-`페이지 : ` [admin-inout-month.jsp](/)
+`페이지 : ` [admin-inout-month.jsp](/View/admin/admin-inout-month.jsp)
 <br/>
-`Controller : `[AdminController.java](/)
+`Controller : `[AdminController.java](/Controller/AdminController.java)
 <br/>
-`Service : ` [AdminServiceImpl.java](/)
+`Service : ` [AdminServiceImpl.java](/Service/Impl/AdminServiceImpl.java)
 <br/>
-`SQL : ` [InoutMapper.xml](/)
+`SQL : ` [InoutMapper.xml](/SQL/InoutMapper.xml)
 
 #### 기능 요약
 > * 관리자 권한을 부여받은 사용자만 접근 가능, 메뉴 노출
@@ -270,13 +270,13 @@ limit 		#{firstIndex, javaType=int}, #{recordCountPerPage, javaType=int}
 <img src="/img/03_vacation_Page01.jpg">
 
 #### 코드 링크
-`페이지 : ` [my-vacation.jsp](/)
+`페이지 : ` [my-vacation.jsp](/View/vac/my-vacation.jsp)
 <br/>
-`Controller : `[VacationController.java](/)
+`Controller : `[VacationController.java](/Controller/VacationController.java)
 <br/>
-`Service : ` [VacationServiceImpl.java](/)
+`Service : ` [VacationServiceImpl.java](/Service/Impl/VacationServiceImpl.java)
 <br/>
-`SQL : ` [VacationMapper.xml](/)
+`SQL : ` [VacationMapper.xml](/SQL/VacationMapper.xml)
 
 #### 기능 요약
 > * 본인이 등록한 휴가 내역 조회
@@ -287,13 +287,13 @@ limit 		#{firstIndex, javaType=int}, #{recordCountPerPage, javaType=int}
 <img src="/img/03_vacation_Page03.jpg">
 
 #### 코드 링크
-`페이지 : ` [myvac-reg.jsp](/)
+`페이지 : ` [myvac-reg.jsp](/View/vac/myvac-reg.jsp)
 <br/>
-`Controller : `[VacationController.java](/)
+`Controller : `[VacationController.java](/Controller/VacationController.java)
 <br/>
-`Service : ` [VacationServiceImpl.java](/)
+`Service : ` [VacationServiceImpl.java](/Service/Impl/VacationServiceImpl.java)
 <br/>
-`SQL : ` [VacationMapper.xml](/)
+`SQL : ` [VacationMapper.xml](/SQL/VacationMapper.xml)
 
 #### 기능 요약
 > * 휴가 종류 : DB에서 값을 받아와서 리스트 생성
@@ -376,13 +376,13 @@ $('#vcreg_form').validate({
 <img src="/img/03_vacation_Admin_Page01.jpg">
 
 #### 코드 링크
-`페이지 : ` [vac-log.jsp](/)
+`페이지 : ` [vac-log.jsp](/View/admin/vac-log.jsp)
 <br/>
-`Controller : `[AdminController.java](/)
+`Controller : `[AdminController.java](/Controller/AdminController.java)
 <br/>
-`Service : ` [AdminServiceImpl.java](/)
+`Service : ` [AdminServiceImpl.java](/Service/Impl/AdminServiceImpl.java)
 <br/>
-`SQL : ` [VacationMapper.xml](/)
+`SQL : ` [VacationMapper.xml](/SQL/VacationMapper.xml)
 <br/>
 
 #### 기능 요약
@@ -398,13 +398,13 @@ $('#vcreg_form').validate({
 <img src="/img/03_vacation_Admin_Page02.jpg">
 
 #### 코드 링크
-`View : ` [vac-ann-log.jsp](/)
+`View : ` [vac-ann-log.jsp](/View/admin/vac-ann-log.jsp)
 <br/>
-`Controller : `[AdminController.java:570line](/)
+`Controller : `[AdminController.java:570line](/Controller/AdminController.java#L570)
 <br/>
-`Service : ` [AdminServiceImpl.java:260line](/)
+`Service : ` [AdminServiceImpl.java:260line](/Service/Impl/AdminServiceImpl.java#L260)
 <br/>
-`SQL : ` [VacationMapper.xml:150line](/) `
+`SQL : ` [VacationMapper.xml:150line](/SQL/VacationMapper.xml#L150) `
 
 #### 기능 요약
 > * 관리자 권한을 부여받은 사용자만 접근 가능 / 메뉴 노출
@@ -415,13 +415,13 @@ $('#vcreg_form').validate({
 <img src="/img/03_vacation_Admin_Page04.jpg">
 
 #### 코드 링크
-`View : ` [vac-ann-reg.jsp](/)
+`View : ` [vac-ann-reg.jsp](/View/admin/vac-ann-reg.jsp)
 <br/>
-`Controller : `[AdminController.java:570line](/)
+`Controller : `[AdminController.java:570line](/Controller/AdminController.java#L570)
 <br/>
-`Service : ` [AdminServiceImpl.java:281line](/)
+`Service : ` [AdminServiceImpl.java:281line](/Service/Impl/AdminServiceImpl.java#L281)
 <br/>
-`SQL : ` [VacationMapper.xml:150line](/)
+`SQL : ` [VacationMapper.xml:150line](/SQL/VacationMapper.xml#L150)
 
 #### 기능 요약
 > * 관리자 권한을 부여받은 사용자만 접근 가능 / 메뉴 노출
@@ -495,18 +495,15 @@ $('#selectyear').change(function() {
 
 #### 코드 링크
 관리자 로그인  
-`View : ` [employeeList.jsp](/)
-<br/>
-`Controller : `[AdminController.java:100line](/)
-<br/>
-`Service : ` [AdminServiceImpl.java:300line](/)
+`View : ` [employeeList.jsp](/View/admin/employeeList.jsp)
+
 <br/>
 
 일반 직원 로그인  
-`View : ` [list.jsp](/)
+`View : ` [list.jsp](/View/emp/list.jsp)
 <br/>
 
-`SQL : ` [EmployeeMapper.xml](/)
+`SQL : ` [EmployeeMapper.xml](/SQL/EmployeeMapper.xml)
 
 #### 기능 요약
 > * 일반 직원 로그인 : 현재 재직 상태인 직원들 목록만 노출, 수정 불가
