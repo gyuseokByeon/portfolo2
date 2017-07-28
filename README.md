@@ -42,7 +42,7 @@ DB : MariaDB
 =====
 1.1 로그인
 --------
-<img src="/img/01_login_Page.JPG" width="500">
+<img src="/img/01_login_Page.JPG">
 
 > * spring security <br/>
 > * 직원 테이블의 LEVEL 컬럼의 값으로 권한 구분 <br/>
