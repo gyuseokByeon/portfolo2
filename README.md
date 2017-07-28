@@ -503,10 +503,10 @@ $('#selectyear').change(function() {
 <br/>
 
 일반 직원 로그인  
-`View : ` [list.jsp](/milvus_security_git/src/main/webapp/WEB-INF/views/emp/list.jsp)
+`View : ` [list.jsp](/)
 <br/>
 
-`SQL : ` [EmployeeMapper.xml](/milvus_security_git/src/main/resources/META-INF/mybatis/mapper/EmployeeMapper.xml)
+`SQL : ` [EmployeeMapper.xml](/)
 
 #### 기능 요약
 > * 일반 직원 로그인 : 현재 재직 상태인 직원들 목록만 노출, 수정 불가
