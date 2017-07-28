@@ -76,13 +76,13 @@ if(rememberYn.equals("rememberMe")) {
 <img src="/img/02_inout_Page03.jpg" height="300">
 
 #### 코드 링크
-`페이지 : ` [inout-log.jsp](/milvus_security_git/src/main/webapp/WEB-INF/views/inout/inout-log.jsp)
+`페이지 : ` [inout-log.jsp](/)
 <br/>
-`Controller : ` [InoutController.java](/milvus_security_git/src/main/java/com/template/controller/InOutController.java)
+`Controller : ` [InoutController.java](/)
 <br/>
-`Service : ` [InoutServiceImpl.java](/milvus_security_git/src/main/java/com/template/service/Impl/InoutServiceImpl.java)
+`Service : ` [InoutServiceImpl.java](/)
 <br/>
-`SQL : ` [InoutMapper.xml](/milvus_security_git/src/main/resources/META-INF/mybatis/mapper/InoutMapper.xml)
+`SQL : ` [InoutMapper.xml](/)
 
 #### 기능 요약
 > * 반응형 웹페이지 <br/>
@@ -139,13 +139,13 @@ $(window).scroll(function() {
 <img src="/img/02_inout_Admin_Page03.jpg" width="500"><br/>
 
 #### 코드 링크
-`페이지 : ` [adminInoutLog.jsp](/milvus_security_git/src/main/webapp/WEB-INF/views/admin/adminInoutLog.jsp)
+`페이지 : ` [adminInoutLog.jsp](/)
 <br/>
-`Controller : ` [AdminController.java](/milvus_security_git/src/main/java/com/template/controller/AdminController.java)
+`Controller : ` [AdminController.java](/)
 <br/>
-`Service : ` [AdminServiceImpl.java](/milvus_security_git/src/main/java/com/template/service/Impl/AdminServiceImpl.java)
+`Service : ` [AdminServiceImpl.java](/)
 <br/>
-`SQL : ` [InoutMapper.xml](/milvus_security_git/src/main/resources/META-INF/mybatis/mapper/InoutMapper.xml)
+`SQL : ` [InoutMapper.xml](/)
 
 
 #### 기능 요약
@@ -214,13 +214,13 @@ limit			#{firstIndex, javaType=int}, #{recordCountPerPage, javaType=int}
 <img src="/img/02_inout_Admin_Page05.jpg" width="500"><br/>
 
 #### 코드 링크
-`페이지 : ` [admin-inout-month.jsp](/milvus_security_git/src/main/webapp/WEB-INF/views/admin/adm-inout-month.jsp)
+`페이지 : ` [admin-inout-month.jsp](/)
 <br/>
-`Controller : `[AdminController.java](/milvus_security_git/src/main/java/com/template/controller/AdminController.java)
+`Controller : `[AdminController.java](/)
 <br/>
-`Service : ` [AdminServiceImpl.java](/milvus_security_git/src/main/java/com/template/service/Impl/AdminServiceImpl.java)
+`Service : ` [AdminServiceImpl.java](/)
 <br/>
-`SQL : ` [InoutMapper.xml](/milvus_security_git/src/main/resources/META-INF/mybatis/mapper/InoutMapper.xml)
+`SQL : ` [InoutMapper.xml](/)
 
 #### 기능 요약
 > * 관리자 권한을 부여받은 사용자만 접근 가능, 메뉴 노출
@@ -270,13 +270,13 @@ limit 		#{firstIndex, javaType=int}, #{recordCountPerPage, javaType=int}
 <img src="/img/03_vacation_Page01.jpg">
 
 #### 코드 링크
-`페이지 : ` [my-vacation.jsp](/milvus_security_git/src/main/webapp/WEB-INF/views/vac/my-vacation.jsp)
+`페이지 : ` [my-vacation.jsp](/)
 <br/>
-`Controller : `[VacationController.java](/milvus_security_git/src/main/java/com/template/controller/VacationController.java)
+`Controller : `[VacationController.java](/)
 <br/>
-`Service : ` [VacationServiceImpl.java](/milvus_security_git/src/main/java/com/template/service/impl/VacationServiceImpl.java)
+`Service : ` [VacationServiceImpl.java](/)
 <br/>
-`SQL : ` [VacationMapper.xml](/milvus_security_git/src/main/resources/META-INF/mybatis/mapper/VacationMapper.xml)
+`SQL : ` [VacationMapper.xml](/)
 
 #### 기능 요약
 > * 본인이 등록한 휴가 내역 조회
@@ -287,13 +287,13 @@ limit 		#{firstIndex, javaType=int}, #{recordCountPerPage, javaType=int}
 <img src="/img/03_vacation_Page03.jpg">
 
 #### 코드 링크
-`페이지 : ` [myvac-reg.jsp](/milvus_security_git/src/main/webapp/WEB-INF/views/vac/myvac-reg.jsp)
+`페이지 : ` [myvac-reg.jsp](/)
 <br/>
-`Controller : `[VacationController.java](/milvus_security_git/src/main/java/com/template/controller/VacationController.java)
+`Controller : `[VacationController.java](/)
 <br/>
-`Service : ` [VacationServiceImpl.java](/milvus_security_git/src/main/java/com/template/service/impl/VacationServiceImpl.java)
+`Service : ` [VacationServiceImpl.java](/)
 <br/>
-`SQL : ` [VacationMapper.xml](/milvus_security_git/src/main/resources/META-INF/mybatis/mapper/VacationMapper.xml)
+`SQL : ` [VacationMapper.xml](/)
 
 #### 기능 요약
 > * 휴가 종류 : DB에서 값을 받아와서 리스트 생성
@@ -376,13 +376,13 @@ $('#vcreg_form').validate({
 <img src="/img/03_vacation_Admin_Page01.jpg">
 
 #### 코드 링크
-`페이지 : ` [vac-log.jsp](/milvus_security_git/src/main/webapp/WEB-INF/views/admin/vac-log.jsp)
+`페이지 : ` [vac-log.jsp](/)
 <br/>
-`Controller : `[AdminController.java](/milvus_security_git/src/main/java/com/template/controller/AdminController.java#L516)
+`Controller : `[AdminController.java](/)
 <br/>
-`Service : ` [AdminServiceImpl.java](/milvus_security_git/src/main/java/com/template/service/Impl/AdminServiceImpl.java#L200)
+`Service : ` [AdminServiceImpl.java](/)
 <br/>
-`SQL : ` [VacationMapper.xml](/milvus_security_git/src/main/resources/META-INF/mybatis/mapper/VacationMapper.xml#L90)
+`SQL : ` [VacationMapper.xml](/)
 <br/>
 
 #### 기능 요약
@@ -398,13 +398,13 @@ $('#vcreg_form').validate({
 <img src="/img/03_vacation_Admin_Page02.jpg">
 
 #### 코드 링크
-`View : ` [vac-ann-log.jsp](/milvus_security_git/src/main/webapp/WEB-INF/views/admin/vac-ann-log.jsp)
+`View : ` [vac-ann-log.jsp](/)
 <br/>
-`Controller : `[AdminController.java:570line](/milvus_security_git/src/main/java/com/template/controller/AdminController.java#L570)
+`Controller : `[AdminController.java:570line](/)
 <br/>
-`Service : ` [AdminServiceImpl.java:260line](/milvus_security_git/src/main/java/com/template/service/Impl/AdminServiceImpl.java#L260)
+`Service : ` [AdminServiceImpl.java:260line](/)
 <br/>
-`SQL : ` [VacationMapper.xml:150line](/milvus_security_git/src/main/resources/META-INF/mybatis/mapper/VacationMapper.xml#L150) `
+`SQL : ` [VacationMapper.xml:150line](/) `
 
 #### 기능 요약
 > * 관리자 권한을 부여받은 사용자만 접근 가능 / 메뉴 노출
@@ -415,13 +415,13 @@ $('#vcreg_form').validate({
 <img src="/img/03_vacation_Admin_Page04.jpg">
 
 #### 코드 링크
-`View : ` [vac-ann-reg.jsp](/milvus_security_git/src/main/webapp/WEB-INF/views/admin/vac-ann-reg.jsp)
+`View : ` [vac-ann-reg.jsp](/)
 <br/>
-`Controller : `[AdminController.java:570line](/milvus_security_git/src/main/java/com/template/controller/AdminController.java#L601)
+`Controller : `[AdminController.java:570line](/)
 <br/>
-`Service : ` [AdminServiceImpl.java:281line](/milvus_security_git/src/main/java/com/template/service/Impl/AdminServiceImpl.java#L281)
+`Service : ` [AdminServiceImpl.java:281line](/)
 <br/>
-`SQL : ` [VacationMapper.xml:150line](/milvus_security_git/src/main/resources/META-INF/mybatis/mapper/VacationMapper.xml#L150)
+`SQL : ` [VacationMapper.xml:150line](/)
 
 #### 기능 요약
 > * 관리자 권한을 부여받은 사용자만 접근 가능 / 메뉴 노출
@@ -495,11 +495,11 @@ $('#selectyear').change(function() {
 
 #### 코드 링크
 관리자 로그인  
-`View : ` [employeeList.jsp](/milvus_security_git/src/main/webapp/WEB-INF/views/admin/employeeList.jsp)
+`View : ` [employeeList.jsp](/)
 <br/>
-`Controller : `[AdminController.java:100line](/milvus_security_git/src/main/java/com/template/controller/AdminController.java#L100)
+`Controller : `[AdminController.java:100line](/)
 <br/>
-`Service : ` [AdminServiceImpl.java:300line](/milvus_security_git/src/main/java/com/template/service/Impl/AdminServiceImpl.java#L300)
+`Service : ` [AdminServiceImpl.java:300line](/)
 <br/>
 
 일반 직원 로그인  
