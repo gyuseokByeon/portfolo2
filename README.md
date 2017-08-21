@@ -514,6 +514,3 @@ $('#selectyear').change(function() {
 
 
 
-
-
-# 1.2 내부 프로젝트 수정 및 유지보수
